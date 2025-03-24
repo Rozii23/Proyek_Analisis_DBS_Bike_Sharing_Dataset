@@ -25,7 +25,7 @@ if option == "Preview Dataset":
 elif option == "Distribusi Penyewaan Sepeda":
     st.title("📊 Distribusi Penyewaan Sepeda Berdasarkan Musim")
     fig, ax = plt.subplots(figsize=(8, 6))
-    sns.boxplot(x=day_df['season'], y=day_df['cnt'], ax=ax)
+    sns.barplot(x=day_df['season'], y=day_df['cnt'], ax=ax)
     ax.set_xlabel("Musim")
     ax.set_ylabel("Jumlah Penyewaan Sepeda")
     st.pyplot(fig)
