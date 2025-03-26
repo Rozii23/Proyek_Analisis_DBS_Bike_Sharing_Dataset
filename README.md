@@ -26,7 +26,7 @@ pip install -r requirements.txt
 streamlit run dashboard.py
 ```
 ## 🌐 Live Dashboard
-🚀 Coba di sini 👉 [Bike Sharing Dashboard](https://aqojtqgakeporrgcwquusr.streamlit.app/)
+🚀 Coba di sini 👉 [Bike Sharing Dashboard](https://drjkoml6hyoehrqgarsdna.streamlit.app/)
 
 ## 🛠 Teknologi yang Digunakan
 - Python: Bahasa pemrograman utama
