@@ -38,4 +38,4 @@ streamlit run dashboard.py
 - Penyewaan sepeda meningkat selama musim panas, sedangkan musim dingin memiliki jumlah penyewaan terendah.
 - Tren tahunan menunjukkan peningkatan signifikan dalam penggunaan sepeda dari waktu ke waktu.
 - Cuaca dan suhu berpengaruh besar terhadap jumlah penyewaan sepeda.
-- Dengan RFM Analysis, pelanggan dapat dikategorikan untuk strategi pemasaran yang lebih baik.
+- Dari analisis jumlah penyewaan sepeda berdasarkan kategori hari, terlihat bahwa penyewaan sepeda pada akhir pekan cenderung lebih rendah dibandingkan hari kerja.
