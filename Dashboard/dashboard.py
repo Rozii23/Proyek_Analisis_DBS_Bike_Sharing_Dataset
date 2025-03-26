@@ -15,11 +15,15 @@ day_df['dteday'] = pd.to_datetime(day_df['dteday'])
 season_mapping = {1: "Spring", 2: "Summer", 3: "Fall", 4: "Winter"}
 day_df['season_label'] = day_df['season'].map(season_mapping)
 
+# Mapping kondisi cuaca agar lebih mudah dibaca
+weather_mapping = {1: "Clear", 2: "Cloudy", 3: "Rain/Snow"}
+day_df['weather_label'] = day_df['weathersit'].map(weather_mapping)
+
 # --- Sidebar Navigation ---
 st.sidebar.title("📊 Menu Analisis Data")
 option = st.sidebar.selectbox("Pilih Analisis", [
     "Preview Dataset", "Distribusi Penyewaan Sepeda", "Tren Penyewaan Sepeda",
-    "Barplot Musiman", "RFM Analysis", "Analisis Cuaca", "Pola Hari Kerja vs Akhir Pekan"
+    "Barplot Musiman", "Analisis Cuaca", "Pola Hari Kerja vs Akhir Pekan"
 ])
 
 # --- Fitur Interaktif: Filter berdasarkan Tanggal ---
@@ -57,7 +61,7 @@ elif option == "Tren Penyewaan Sepeda":
     ax.set_ylabel("Jumlah Penyewaan Sepeda")
     ax.set_title("Tren Penyewaan Sepeda Sepanjang Tahun")
     plt.xticks(rotation=45)
-    ax.grid(True, linestyle="--", alpha=0.7) # Tambahkan grid untuk memperjelas tren
+    ax.grid(True, linestyle="--", alpha=0.7)
     st.pyplot(fig)
 
 # --- Barplot Penyewaan Sepeda Berdasarkan Musim ---
@@ -70,36 +74,13 @@ elif option == "Barplot Musiman":
     ax.grid(True, linestyle="--", alpha=0.7)
     st.pyplot(fig)
 
-# --- RFM Analysis (Recency, Frequency, Monetary) ---
-elif option == "RFM Analysis":
-    st.title("📊 RFM Analysis untuk Pengguna Sepeda")
-
-    # Simulasi RFM dengan UserID berdasarkan hari transaksi
-    day_df['user_id'] = day_df.index % 1000  # Membuat dummy user_id
-    rfm_df = day_df.groupby('user_id').agg(
-        Recency=('dteday', lambda x: (day_df['dteday'].max() - x.max()).days),
-        Frequency=('user_id', 'count'),
-        Monetary=('cnt', 'sum')
-    ).reset_index()
-    
-    st.subheader("Tabel RFM Analysis")
-    st.dataframe(rfm_df.head(10))
-    
-    # Visualisasi RFM
-    fig, ax = plt.subplots(figsize=(10, 5))
-    sns.scatterplot(x=rfm_df['Recency'], y=rfm_df['Monetary'], hue=rfm_df['Frequency'], palette='coolwarm', ax=ax)
-    ax.set_xlabel("Recency (Hari sejak transaksi terakhir)")
-    ax.set_ylabel("Total Penyewaan Sepeda (Monetary)")
-    ax.grid(True, linestyle="--", alpha=0.7)
-    st.pyplot(fig)
-
 # --- Analisis Cuaca dan Penyewaan Sepeda ---
 elif option == "Analisis Cuaca":
     st.title("☀️ Analisis Cuaca dan Penyewaan Sepeda")
 
     # Scatter plot hubungan temperatur dan penyewaan
     fig, ax = plt.subplots(figsize=(8, 6))
-    sns.scatterplot(x=filtered_df['temp'], y=filtered_df['cnt'], hue=filtered_df['season_label'], palette="coolwarm", alpha=0.6, ax=ax)
+    sns.scatterplot(x=filtered_df['temp'], y=filtered_df['cnt'], hue=filtered_df['weather_label'], palette="coolwarm", alpha=0.6, ax=ax)
     ax.set_xlabel("Temperatur (Normalisasi)")
     ax.set_ylabel("Jumlah Penyewaan Sepeda")
     ax.grid(True, linestyle="--", alpha=0.7)
@@ -107,9 +88,9 @@ elif option == "Analisis Cuaca":
 
     # Barplot hubungan kondisi cuaca dan jumlah penyewaan sepeda
     fig, ax = plt.subplots(figsize=(8, 6))
-    sns.barplot(x=filtered_df['weathersit'], y=filtered_df['cnt'], estimator=np.sum, palette="rocket", ax=ax)
-    ax.set_xlabel("Kondisi Cuaca (1=Clear, 2=Cloudy, 3=Rain/Snow)")
-    ax.set_ylabel("Total Penyewaan Sepeda")
+    sns.barplot(x=filtered_df['weather_label'], y=filtered_df['cnt'], estimator=np.mean, palette="rocket", ax=ax)
+    ax.set_xlabel("Kondisi Cuaca")
+    ax.set_ylabel("Rata-rata Penyewaan Sepeda")
     ax.grid(True, linestyle="--", alpha=0.7)
     st.pyplot(fig)
 
