@@ -6,7 +6,11 @@ import numpy as np
 
 # --- Load Dataset ---
 file_path = "Dashboard/day.csv"
-day_df = pd.read_csv(file_path)
+try:
+    day_df = pd.read_csv(file_path, on_bad_lines='skip', engine='python')
+except FileNotFoundError:
+    st.error(f"File {file_path} tidak ditemukan. Pastikan file tersedia di folder Dashboard.")
+    st.stop()
 
 # --- Preprocessing ---
 day_df['dteday'] = pd.to_datetime(day_df['dteday'])
@@ -98,12 +102,13 @@ elif option == "Analisis Cuaca":
 elif option == "Pola Hari Kerja vs Akhir Pekan":
     st.title("📅 Pola Penyewaan Sepeda: Hari Kerja vs Akhir Pekan")
 
-    # Mapping Hari Kerja dan Akhir Pekan
-    filtered_df["Kategori Hari"] = filtered_df["workingday"].map({0: "Akhir Pekan", 1: "Hari Kerja"})
+    # Hindari error dengan menyalin dataset sebelum memodifikasi kolom
+    df_copy = filtered_df.copy()
+    df_copy["Kategori Hari"] = df_copy["workingday"].map({0: "Akhir Pekan", 1: "Hari Kerja"})
 
     # Visualisasi dengan barplot
     fig, ax = plt.subplots(figsize=(8, 6))
-    sns.barplot(x="Kategori Hari", y="cnt", data=filtered_df, estimator=np.mean, palette="coolwarm", ax=ax)
+    sns.barplot(x="Kategori Hari", y="cnt", data=df_copy, estimator=np.mean, palette="coolwarm", ax=ax)
     ax.set_xlabel("Kategori Hari")
     ax.set_ylabel("Rata-rata Penyewaan Sepeda")
     ax.set_title("Perbandingan Penyewaan Sepeda pada Hari Kerja vs. Akhir Pekan")
